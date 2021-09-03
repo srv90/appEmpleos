@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>AppEmpleos | Listado de Solicitudes de Empleo</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/bootstrap/css/jumbotron.css}" rel="stylesheet">
+    <link th:href="@{/bootstrap/css/sticky-footer-navbar.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}"></link>
+  </head>
+
+  <body>
+
+    <header th:insert="fragments/menu :: menu-principal"></header>
+
+    <main role="main">     
+      <hr>
+      <div class="container"> 
+
+        <div class="card">
+          <h4 class="card-header"><strong>Listado de Solicitudes de Empleo</strong></h4>              
+          <div class="card-body">
+          	<div th:if="${msg != null}" class='alert alert-success' th:text="${msg}" role='alert'></div>
+            <table class="table table-hover table-dark">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Categoría</th>
+                  <th scope="col">Vacante</th>
+                  <th scope="col">Recibido</th>
+                  <th scope="col" sec:authorize="hasAuthority('ADMINISTRADOR')">Usuario</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="solicitud : ${solicitudes}">
+                  <td th:text="${solicitud.vacante.categoria.nombre}"></td>
+                  <td th:text="${solicitud.vacante.nombre}"></td>
+                  <td th:text="${#dates.format(solicitud.fecha, 'dd-MM-yyyy')}"></td>
+                  <td sec:authorize="hasAuthority('ADMINISTRADOR')" th:text="${solicitud.usuario.username}"></td>                 
+                  <td>                    
+                    <a th:href="@{/solicitudes/delete/{id} (id=${solicitud.id}) }" onclick="return confirm('¿Estas seguro?')" class="btn btn-danger btn-sm" role="button" title="Eliminar el registro."><i class="fa fa-trash" aria-hidden="true"></i></a>                    
+                    <a th:href="@{/cv/{archivo} (archivo=${solicitud.archivo}) } " target="_blank" class="btn btn-success btn-sm" role="button" title="Descargar Curriculum Vitae."><i class="fa fa-download" aria-hidden="true"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> <!-- /container -->
+
+    </main>
+
+    <footer th:insert="fragments/footer :: pie-pagina" class="footer"></footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+  </body>
+</html>

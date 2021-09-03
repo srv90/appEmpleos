@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>AppEmpleos | Listado de Usuarios</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/bootstrap/css/jumbotron.css}" rel="stylesheet">
+    <link th:href="@{/bootstrap/css/sticky-footer-navbar.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}"></link>
+
+  </head>
+
+  <body>
+
+    <header th:insert="fragments/menu :: menu-principal" ></header>
+
+    <main role="main">     
+      <hr>
+      <div class="container"> 
+        <div class="card">
+          <h4 class="card-header"><strong>Listado de Usuarios</strong></h4>              
+          <div class="card-body"> 
+            <a class="btn btn-primary" th:href="@{/usuarios/create}" title="Crear nuevo usuario" role="button" id="crear"><i class="fa fa-plus-square" aria-hidden="true"></i> Nuevo</a>            
+            <hr>
+    		 <div th:if="${msg != null}" class='alert alert-info' th:text="${msg}" role='alert'></div>
+            <table class="table table-hover table-dark">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Perfil</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Username</th>                  
+                  <th scope="col">Email</th>
+                  <th scope="col">Estatus</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody th:each="usuario: ${lista}">
+ 				 <tr th:each="perfilTmp: ${usuario.perfiles}">           
+  				 <td th:text="${perfilTmp.perfil}"></td>              
+                  <td th:text="${usuario.nombre}"></td>
+                  <td th:text="${usuario.username}"></td>                  
+                  <td th:text="${usuario.email}"></td>
+                  <td>
+                   	 <span th:if="${usuario.estatus==1}">ACTIVO</span>
+ 					 <span th:unless= "${usuario.estatus==1}">INACTIVO</span>
+                  </td>
+                  <td>
+                    <a th:href="@{/usuarios/edit/{id} ( id=${usuario.id} ) }"   class="btn btn-primary btn-sm" role="button" title="Editar" ><i class="fa fa-edit"></i></a>
+                    <a th:href="@{/usuarios/block/{id} ( id=${usuario.id} ) }"   onclick="return confirm('¿Desea bloquear el usuario?')" class="btn btn-success btn-sm" type="button" title="Bloquear el acceso al sistema para este usuario." ><i class="fa fa-lock" aria-hidden="true"></i></a>	
+                    <a th:href="@{/usuarios/unblock/{id} ( id=${usuario.id} ) }" onclick="return confirm('¿Desea desbloquear el usuario?')" class="btn btn-secondary btn-sm" role="button" title="Permitir el acceso al sistema a este usuario."><i class="fa fa-unlock" aria-hidden="true"></i></a>
+                    <a th:href="@{/usuarios/delete/{id} ( id=${usuario.id} ) }"  onclick="return confirm('¿Estas seguro?')" class="btn btn-danger btn-sm" role="button" title="Eliminar el registro."><i class="fa fa-trash" aria-hidden="true"></i></a>
+
+                  </td>
+                </tr>                                              
+              </tbody>
+            </table>
+            
+          </div>
+        </div>
+      </div> <!-- /container -->
+
+    </main>
+
+    <footer th:insert="fragments/footer :: pie-pagina" class="footer"></footer>
+    
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>   
+
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<div th:fragment ="menu-principal" >
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" th:href="@{/}">AppEmpleos</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div  class="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/}"><i class="fa fa-home" aria-hidden="true" style="color: red; font-size: 20px;"></i> Inicio </a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('SUPERVISOR','ADMINISTRADOR')">
+              <a class="nav-link" th:href="@{/vacantes/indexPaginate}">Listado Vacantes</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('SUPERVISOR','ADMINISTRADOR')">
+              <a class="nav-link" th:href="@{/categorias/indexPaginate}">Listado Categorias</a>
+            </li>           
+            </li>      
+              <li class="nav-item" sec:authorize="hasAnyAuthority('SUPERVISOR','ADMINISTRADOR')">
+              <a class="nav-link" th:href="@{/solicitudes/index}">Listado Postulaciones</a>
+            </li>               
+            <li class="nav-item" sec:authorize="hasAuthority('ADMINISTRADOR')">
+              <a class="nav-link" th:href="@{/usuarios/index}">Listado Usuarios</a>
+            </li>  
+            <li>      
+              <li class="nav-item" sec:authorize="hasAuthority('USUARIO')">
+              <a class="nav-link" th:href="@{/solicitudes/misSolicitudes}">Mis postulaciones</a>
+            </li>  
+            <li>      
+              <li class="nav-item" sec:authorize="hasAuthority('USUARIO')">       
+              <a class="nav-link" data-toggle="modal" data-target="#modalOfertas" type="button">Quiero recibir ofertas</a>
+            </li>
+             <li  th:unless="${session.isEmpty()}">      
+              <li class="nav-item" sec:authorize="hasAuthority('USUARIO')">
+               <a class="nav-link" th:href="@{/usuarios/edit/{id} ( id=${session.usuario.id} ) }">Mis datos</a>
+          </li>
+          </ul>
+		<div sec:authorize="isAnonymous()">
+			<a class="btn btn-primary" th:href="@{/index}"><i class="fa fa-user"></i> Ingresar</a>&nbsp; 
+			<a class="btn btn-info" th:href="@{/register}"><i class="fa fa-sign-in"></i> Registrarse</a>
+		</div>
+		<div sec:authorize="isAuthenticated()">
+			<span class="text-light">Bienvenido</span>&nbsp;<span class="text-light text-capitalize " sec:authentication="name"></span>&nbsp; 
+			<a class="btn btn-outline-success btn-lg" th:href="@{/logout}"><i class="fa fa-sign-out"></i> Salir</a>
+		</div>         
+       </div>
+      </nav>
+      
+      <div id="modalOfertas" class="modal fade" tabindex="-1" role="dialog"
+		aria-hidden="true" >
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header modal-header-success">
+					<h3>Newsletter</h3>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">X</button>
+				</div>
+				<div class="modal-body">
+					<form class="form" role="form" method="POST" th:action="@{/ofertas}" > 
+					<div class="form-group">
+                      <label for="categoria" >Categorias</label>
+                       <div th:each="categoriaTmp: ${categorias}">
+                        <input type="checkbox" th:value="${categoriaTmp.nombre}"  
+                                           	   th:text="| &nbsp;${categoriaTmp.nombre}" 
+                                     	       name="listadoCategorias">
+                                     	       
+                     </div>        
+                     
+                   </div>
+						<div class="form-group py-4">
+							<button type="submit" class="btn btn-success btn-lg"
+								id="enviar">Enviar</button>						
+							<button class="btn btn-outline-secondary btn-lg float-right"
+								data-dismiss="modal" aria-hidden="true">Cancelar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+     

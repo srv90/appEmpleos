@@ -1,0 +1,132 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>AppEmpleos | Modificar usuario</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/bootstrap/css/jumbotron.css}" rel="stylesheet">
+    <link th:href="@{/bootstrap/css/sticky-footer-navbar.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}"></link>
+    
+
+  </head>
+
+  <body>
+
+    <header th:insert="fragments/menu :: menu-principal" ></header>
+
+    <main role="main">     
+      <hr>
+      <div class="container"> 
+        <div class="card">
+        
+         <h4 class="card-header"><strong>Modificar usuario</strong></h4>     
+          <div th:if="${msg != null}" class='alert alert-primary' th:text="${msg}" role='alert'></div>
+          <div class="card-body" >
+            <form th:action="@{/usuarios/update}" method="post" th:object="${usuario}">
+                   <div th:if="${#fields.hasErrors('*')}"class='alert alert-danger' role='alert'>
+				    Por favor corrija los siguientes errores:
+				     <ul>
+				      <li th:each="err : ${#fields.errors('*')}" th:text="${err}"/>
+				      </ul>
+			      </div>              
+              <div class="row" >
+                <div class="col-md-3"> 
+                 <input type="hidden" th:field="*{id}" id="id" name="id">
+                  <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" th:field="*{nombre}" id="nombre" name="nombre" placeholder="Escriba su nombre" required="required"  th:autofocus="autofocus">
+                  </div>
+                </div>
+                <div class="col-md-3"> 
+                  <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" class="form-control" th:field="*{email}" id="email" name="email" placeholder="Escriba su correo electrónico" required="required">
+                  </div> 
+                </div>    
+               <div class="col-md-3"  sec:authorize="hasAuthority('ADMINISTRADOR')" > 
+               <div class="form-check">
+                    <label class="form-check-label" for="estatus"></label><br>
+                    <input class="form-check-input" type="radio" th:field="*{estatus}" name="estatus" id="estatus" value="1">
+                    <label class="form-check-label" for="estatus1">ACTIVO</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" th:field="*{estatus}" name="estatus" id="estatus" value="0">
+                    <label class="form-check-label" for="estatus2">INACTIVO</label>
+                  </div>
+                  </div>
+                <input type="hidden"  th:field="*{estatus}" sec:authorize="hasAuthority('USUARIO')" > 
+                <div class="col-md-3"> 
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" th:field="*{username}" id="username" name="username" placeholder="Escriba su nombre de usuario" required="required">
+                  </div>
+                </div>
+                <div class="col-md-3"> 
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" th:value="*{password}" id="password" name="password" placeholder="Escriba su clave de acceso" required="required">
+                  </div>
+                 </div>
+                <div class="col-md-3"> 
+                  <div class="form-group">
+                    <label for="fechaRegistro">Fecha Registro</label>
+                    <input type="text" class="form-control" th:value="*{#dates.format(fechaRegistro, 'dd-MM-yyyy')}" id="fechaRegistro" name="fechaRegistro" readonly="readonly">
+                  </div>
+                 </div>
+                <div class="col-md-3" sec:authorize="hasAuthority('ADMINISTRADOR')"  > 
+                  <div class="form-group">
+                    <label for="perfil" >Perfil/es</label>
+                    <div th:each="perfilTmp: ${listaPerfiles}">
+                    <input type="checkbox" th:value="${perfilTmp.id}"  
+                                           th:text="| &nbsp;${perfilTmp.perfil}" 
+                                           th:id="${perfilTmp.perfil}"  
+                                           th:field="*{perfiles}" >
+                 </div>  
+                  </div> 
+                  </div>
+                  <div class="col-md-3" sec:authorize="hasAuthority('USUARIO')" id="perfilUsuario" > 
+                  <div class="form-group">
+                    <label for="perfil" >Perfil/es</label>                   
+                    <div th:each="perfilTmp: ${listaPerfiles}">
+                    <input type="checkbox" th:value="${perfilTmp.id}"  
+                                           th:text="| &nbsp;${perfilTmp.perfil}" 
+                                           th:id="${perfilTmp.perfil}"  
+                                           th:field="*{perfiles}"  >
+                 </div>  
+                  </div> 
+                  </div>
+                  <input type="hidden" th:field=*{terminosYCondiciones} >
+                </div>
+              <hr>
+              
+              <button type="submit" title="Modificar usuario" id="modificar" class="btn btn-primary">Modificar</button>
+              <a class="btn btn-danger float-right" th:href="@{/usuarios/delete/{id} ( id=${usuario.id} ) }"  onclick="return confirm('¿Estás seguro que deseas eliminar la cuenta?')" role="button" title="Eliminar la cuenta"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar cuenta</a>
+              
+              
+              
+            </form>
+          </div>
+        </div>
+      </div> <!-- /container -->
+    </main>
+
+    <footer th:insert="fragments/footer :: pie-pagina" class="footer"></footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> 
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>     
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+  </body>
+</html>
